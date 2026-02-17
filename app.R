@@ -103,8 +103,8 @@ shinyApp(
         p("Using eQTL function, you can query significant eQTLs for the SNP and gene  
         of your interest in a specific lung cell type (33 cell types). Allelic box plots (median, IQR, 1.5*IQR), a summary of all significant SNPs for the queried gene, 
           and a summary of all the significant eQTLs for the queried SNP for any gene in any lung cell type are provided. 
-          Specific Ensembl IDs can be obtained in the searching box below. We filtered out lowly expressed genes and genes not within +/- 1MB of a tested SNP. Thus, if there's no output, it means we did not use it for eQTL mapping.   
-          For the variants, rs ID should be provided. For variants without a assigned rs ID, please use chr:pos in hg38 (e.g., chr1:145830810)."),
+          We filtered out lowly expressed genes and genes not within +/- 1MB of a tested SNP. Thus, if there's no output, it means we did not use it for eQTL mapping.   
+          For the variants, rs ID should be provided. For variants without an assigned rs ID, please use chr:pos in hg38 (e.g., chr1:145830810)."),
         h3("Citation"),
         p("If you use ISOLUTION-SE, please cite the following papers:"),
         p("Li B, Luong T, Sisay E, Yin J, Zhang Z, Vaziripour M, Shin JH, Zhao Y, Byun J, Li Y, Lee CH, O'Neil M, Andresson T, Chang YS, Landi MT, Rothman N, Long E, Lan Q, Amos C, Zhou AX, Zhang T, Lee JG, Shi J, Xia J, Mancuso N, Zhang H, Kim EY, Choi J*. 
@@ -362,6 +362,7 @@ shinyApp(
       )
     })
     output$plot21 <- renderPlotly({
+      shiny::validate(need((input$gene_name_eqtl %in% rownames(SCT_list[[1]])), message = 'Please enter a valid gene symbol. If your gene symbol is correct, perhaps the gene is not detected in our dataset'))
       p <- graph_expression(input$gene_name_eqtl)
       ggplotly(p, width = 900, height = 700)
     })
@@ -370,7 +371,7 @@ shinyApp(
         sidebarPanel(
           textInput("rs_eqtl", label=h3("Input RS number:"),value="rs34214613"),
           hr(),
-          textInput("gene_id_eqtl", label=h3("Input gene id:"),value="ENSG00000185303"),
+          textInput("gene_name_eqtl", label=h3("Input gene symbol:"),value="SFTPA2"),
           hr(),
           selectInput("celltype21",label=h3("Select cell type:"),
                       choices = list("AT2"="AT2",
@@ -422,14 +423,18 @@ shinyApp(
     })
     
     output$plot23 <- renderPlotly({
-      p <- eQTL_plot_pub(celltype = input$celltype21, rs = input$rs_eqtl, gene = input$gene_id_eqtl)
+      shiny::validate(
+        need(input$gene_name_eqtl %in% gene_info$phenotype_name, "Please enter a valid gene symbol. If your gene symbol is correct, perhaps the gene is not tested in our eQTL mapping"),
+        need(input$rs %in% snp_info$snp, "The variant is not an eQTL SNP in Luong et al.")
+      )
+      p <- eQTL_plot_pub(celltype = input$celltype21, rs = input$rs_eqtl, gene = input$gene_name_eqtl)
       plotly::ggplotly(p)
     })
     
     
     output$table22 <- DT::renderDataTable(
       DT::datatable((Nominal_combined_eqtl %>% filter(snp == input$rs_eqtl) %>% 
-                       group_by(phenotype_id) %>% 
+                       group_by(phenotype_name) %>% 
                        select(snp, chrom, pos, phenotype_id,phenotype_name,`Ref(0)`,`Alt(1)`,af,pval_nominal,slope,slope_se,celltype)),
                     filter = "top",rownames = FALSE,extensions = 'Buttons', 
                     options = list(lengthMenu = list(c(25,50, 100, 200, 500, -1), list('25','50', '100', '200', '500', 'All')),
@@ -437,7 +442,7 @@ shinyApp(
     )
     
     output$table21 <- DT::renderDataTable(
-      DT::datatable((Nominal_combined_eqtl %>% filter((celltype == input$celltype21) & phenotype_id == input$gene_id_eqtl) %>% 
+      DT::datatable((Nominal_combined_eqtl %>% filter((celltype == input$celltype21) & phenotype_id == input$gene_name_eqtl) %>% 
                        group_by(snp) %>% 
                        select(snp, chrom, pos, phenotype_id,phenotype_name,`Ref(0)`,`Alt(1)`,af,pval_nominal,slope,slope_se,celltype)),
                     filter = "top",rownames = FALSE,extensions = 'Buttons', 
