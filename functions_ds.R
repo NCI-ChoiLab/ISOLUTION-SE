@@ -43,12 +43,13 @@ for (ct in ct_name) {
 # }
 # ###########################
 eQTL_plot_pub = function(celltype,rs,gene){
-  exprs <- expr_list_eqtl[[celltype]][,-c(1:4)]
-  rownames(exprs) <- expr_list_eqtl[[celltype]]$gene_id
+  exprs <- expr_list[[celltype]][,-c(1:4)]
+  rownames(exprs) <- expr_list[[celltype]]$gene_id
   samples <- colnames(exprs)
-  rs2 = snp_info_eqtl[which(snp_info_eqtl$snp == rs),'variant_id']
-  datainput2 <- data.frame(snp = genotypes_eqtl[samples,rs2],
-                           expression = as.numeric(exprs[gene,]))
+  rs2 = snp_info[which(snp_info$snp == rs),'variant_id']
+  gene_sub = gene_info[which(gene_info$phenotype_name == gene), 'phenotype_id']
+  datainput2 <- data.frame(snp = genotypes[samples,rs2],
+                           expression = as.numeric(exprs[gene_sub,]))
   
   datainput2$snp_ra <- "0|0"
   datainput2$snp_ra[which(datainput2$snp == "01")] <- "1|1"
@@ -57,15 +58,14 @@ eQTL_plot_pub = function(celltype,rs,gene){
   datainput2$snp_ra <- paste0("0|0\n", "n=", df[1])
   datainput2$snp_ra[which(datainput2$snp == "01")] <- paste0("1|1\n", "n=", df[3])
   datainput2$snp_ra[which(datainput2$snp == "02")] <- paste0("0|1\n", "n=", df[2])
-  gene_name = gene_info_eqtl[which(gene_info_eqtl$phenotype_id == gene), 'phenotype_name']
   p2 <- ggplot(datainput2, aes(x=snp_ra, y=expression, color=snp_ra)) +
     geom_violin(fill = NA, trim=FALSE,linewidth = 0.25)+
     geom_boxplot(aes(middle=median(expression)), width=0.05, linewidth = 0.25, outlier.shape = NA) +
     geom_smooth(mapping = aes(x = snp_ra, y = expression, group = 1),formula = y~x, color = "gray",
                 method='lm', size = .5, se =TRUE,fill = alpha("gray", .5) ) +
-    labs(title="",x=rs, y = paste0("Normalized expression of ", gene_name))+
+    labs(title="",x=rs, y = paste0("Normalized expression of ", gene))+
     scale_color_manual(values=wes_palette(n=3, name="GrandBudapest1")) +
-    ggtitle(paste0(celltype, "\n",gene_name , ": ",rs, ": ", paste(rs2, "b38", sep = "_")))+
+    ggtitle(paste0(celltype, "\n",gene , ": ",rs, ": ", paste(rs2, "b38", sep = "_")))+
     theme(text = element_text(family = 'Arial'),
           plot.title = element_text(size = 16, color = 'black', face = 'plain'),
           axis.text.x = element_text(color = "black", size = 12,face = "plain"),
