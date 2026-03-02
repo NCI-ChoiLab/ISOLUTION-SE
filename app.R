@@ -424,7 +424,7 @@ shinyApp(
     
     output$plot23 <- renderPlotly({
       shiny::validate(
-        need(input$gene_name_eqtl %in% gene_info$phenotype_name, "Please enter a valid gene symbol. If your gene symbol is correct, perhaps the gene is not tested in our eQTL mapping"),
+        need(input$gene_name_eqtl %in% gene_info_eqtl$phenotype_name, "Please enter a valid gene symbol. If your gene symbol is correct, perhaps the gene is not tested in our eQTL mapping"),
         need(input$rs %in% snp_info$snp, "The variant is not an eQTL SNP in Luong et al.")
       )
       p <- eQTL_plot_pub(celltype = input$celltype21, rs = input$rs_eqtl, gene = input$gene_name_eqtl)

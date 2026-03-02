@@ -47,7 +47,7 @@ eQTL_plot_pub = function(celltype,rs,gene){
   rownames(exprs) <- expr_list[[celltype]]$gene_id
   samples <- colnames(exprs)
   rs2 = snp_info[which(snp_info$snp == rs),'variant_id']
-  gene_sub = gene_info[which(gene_info$phenotype_name == gene), 'phenotype_id']
+  gene_sub = gene_info_eqtl[which(gene_info_eqtl$phenotype_name == gene), 'phenotype_id']
   datainput2 <- data.frame(snp = genotypes[samples,rs2],
                            expression = as.numeric(exprs[gene_sub,]))
   
