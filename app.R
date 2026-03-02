@@ -24,10 +24,11 @@ shinyApp(
         # Include the content of header.html
         "ISoform QTLs Of LUng cell Types by lONg-read sequence and Short-read EQTLs",
         tabPanel("Introduction", uiOutput('page3')),
-        tabPanel("Isoform Structure", uiOutput('page4')),
+        
         tabPanel(
           "ISOLUTION",
           tabsetPanel(
+            tabPanel("Isoform Structure", uiOutput('page4')),
             tabPanel("Isoform Expression", uiOutput('page1')),
             tabPanel("isoQTL", uiOutput('page2')),
             id = "subtab_1"
@@ -41,20 +42,21 @@ shinyApp(
             id = "subtab_2"
           )
         ),
+        
         footer = shiny::includeHTML("footer.html")
       )
       
-    #   tags$style(HTML(" 
-    #     .navbar-default .navbar-brand {color: #1d406c;font-weight: bold}
-    #     .navbar-default .navbar-nav > .active > a,
-    #     .navbar-default .navbar-nav > .active > a:focus,
-    #     .navbar-default .navbar-nav > .active > a:hover {color: black;background-color: white; !important} 
-    #     .navbar-default .navbar-nav > li > a:hover {color: black;text-decoration:underline;}
-    #     .navbar-default .navbar-nav > li > a[data-value='Introduction'] {color: #1d406c;}
-    #     .navbar-default .navbar-nav > li > a[data-value='Isoform Expression'] {color: #1d406c;}
-    #     .navbar-default .navbar-nav > li > a[data-value='isoQTL'] {color: #1d406c;}
-    #     .navbar-default .navbar-nav > li > a[data-value='Isoform Structure'] {color: #1d406c;}
-    #               "))
+      #   tags$style(HTML(" 
+      #     .navbar-default .navbar-brand {color: #1d406c;font-weight: bold}
+      #     .navbar-default .navbar-nav > .active > a,
+      #     .navbar-default .navbar-nav > .active > a:focus,
+      #     .navbar-default .navbar-nav > .active > a:hover {color: black;background-color: white; !important} 
+      #     .navbar-default .navbar-nav > li > a:hover {color: black;text-decoration:underline;}
+      #     .navbar-default .navbar-nav > li > a[data-value='Introduction'] {color: #1d406c;}
+      #     .navbar-default .navbar-nav > li > a[data-value='Isoform Expression'] {color: #1d406c;}
+      #     .navbar-default .navbar-nav > li > a[data-value='isoQTL'] {color: #1d406c;}
+      #     .navbar-default .navbar-nav > li > a[data-value='Isoform Structure'] {color: #1d406c;}
+      #               "))
     ))
     
   ),
@@ -63,21 +65,18 @@ shinyApp(
       tagList(
         h1("Welcome to ISOLUTION-SE!"),
         p(em("New update of ISOLUTION (Feb-10-2026): Cell barcode matched short-read eQTL results were added!")),
+        p("ISOLUTION-SE is a single-cell lung isoform-level QTL and gene-level QTL dataset using long-read and short-read RNA sequencing of cell barcode matched samples. The dataset was generated using the same cDNA libraries from tumor-distant lung tissues of 129 Korean never-smoking women [with epithelial cells enriched]. Single-cell analyses were performed independently on the two datasets but showed highly consistent in cell type annotation and gene-level expression. The raw single-cell data can be found on the GEO under accession no. GSE313639 (long-read) and GSE319381 (short-read). On the website tool, we provide searchable portal and visualization for the isoform and gene expression, and QTL results across cell types. Long-read and short-read data are accessible under two main tabs, ISOLUTION and Short-read eQTL. ISOLUTION part includes three functions: (1) Visualize exon and splice site usage of isoforms within a gene detected in our dataset; (2) Isoform-level expression across cell types; (3) Visualize allelic effects of isoQTL along with summary statistics. Short-read eQTL part includes two functions: (1) Visualize gene expression across cell types at single-cell level, and (2) Visualize allelic effects of eQTL along with summary statistics."),
+        h2("ISOLUTION"),
+        
+        p("The functions of ", strong(em("Isoform Structure")), ", ", strong(em("Isoform expression")), " and ", 
+          strong(em("isoQTL")), 
+          "are under ISOLUTION tab and provide the results of single-cell long-read data."),
         h3("Isoform Structure"),
-        p("Query a gene name below, the Isoform Structure funtion will plot the structure of isoforms within the gene of your interest. 
+        p("Query a gene by gene symbol, the Isoform Structure funtion will plot the structure of isoforms within the gene of your interest. 
         The isoforms are categorized and colored according to the structural categories of ", a(href="https://www.nature.com/articles/s41592-024-02229-2", "SQANTI3"),", including 
         full-splice-match (FSM), incomplete-splice-match (ISM), novel-in-catalog (NIC), novel-not-in-catalog (NNC), antisense, fusion, genic genomic and intergenic.
           We also provide the annotation file (.gtf) of the gene for downloading, 
-          which can be further visualized in ", a(href="https://genome.ucsc.edu/", "UCSC genome browser" ), " and used for extacting specific transcript sequence of isoform.", noWS=TRUE),
-        p("Isoform search is based on Ensembl IDs for accuracy."),
-        textInput("gene_name", "Please input a gene symbol of interest (e.g., SCGB1A1) to find the IDs",width = 800),
-        textOutput("gene_id_trans"),
-        verbatimTextOutput("list_isoforms"),
-        br(),
-        h2("ISOLUTION"),
-        p("The functions of ", strong(em("Isoform expression")), " and ", 
-          strong(em("isoQTL")), 
-          "are under ISOLUTION tab and provide the results of single-cell long-read data."),
+          which can be further visualized in ", a(href="https://genome.ucsc.edu/", "UCSC genome browser" ), " and used for extacting specific transcript sequence of isoform. The ensembl IDs of genes and isoforms would be required for the other functions under ISOLUTION.", noWS=TRUE),
         h3("Isoform Expression"),
         p("Using Isoform Expression function, you could query the gene of your interest for their isoform profile across lung cell types. 
         Enter the number to check the expression levels of the top N most 
@@ -87,29 +86,20 @@ shinyApp(
           For conciseness of plotting, we set a cap for the number of isoforms at 37; 
           > 90% of genes have a lower number of isoforms than this."),
         h3("isoQTL"),
-        p("Using isoQTL function, you could query significant isoQTLs for the SNP and transcript isoform 
-        of your interest in a specific lung cell type. Allelic box plots, a summary of all significant SNPs for the queried transcript isoform, 
-          and a summary of all the significant isoQTLs for the queried SNP for any isoform of the gene in any lung cell type are provided. 
-          Specific transcript IDs can be obtained in the searching box above. 
-          IDs starting with TALON are novel isoforms identified by long-read sequencing in our dataset. 
-          For the variants, rs ID should be provided. For variants without a assigned rs ID, please use chr:pos in hg38 (e.g., chr1:145830810)."),
+        p("Using isoQTL function, you could query significant isoQTLs for the SNP and transcript isoform of your interest in a specific lung cell type. Allelic box plots, a summary of all significant SNPs for the queried transcript isoform, and a summary of all the significant isoQTLs for the queried SNP for any isoform of the gene in any lung cell type are provided. Specific transcript IDs can be obtained in the searching box above. IDs starting with TALON are novel isoforms identified by long-read sequencing in our dataset. For the variants, rs ID should be provided. For variants without an assigned rs ID, please use chr:pos in hg38 (e.g., chr1:145830810)."),
         h2("Short-read eQTL"),
         p("The functions of ", strong(em("Gene expression")), " and ", 
           strong(em("eQTL")), 
           "are under Short-read eQTL tab and provide the results of cell-barcode matched single-cell short-read data."),
         h3("Gene Expression"),
-        p("Using Gene Expression function, you could query the normalized expression of your gene of your interest across our 41 lung cell types."),
+        p("Using Gene Expression function, you could query the normalized expression of your gene of your interest across our 41 lung cell types. Cell types with more than 3,000 cells were downsampled to 3,000 cells, while cell types with less than or equal to 3,000 cells kept their original cell numbers. This was to maximize computation efficiency while still representing our dataset."),
         h3("eQTL"),
-        p("Using eQTL function, you can query significant eQTLs for the SNP and gene  
-        of your interest in a specific lung cell type (33 cell types). Allelic box plots (median, IQR, 1.5*IQR), a summary of all significant SNPs for the queried gene, 
-          and a summary of all the significant eQTLs for the queried SNP for any gene in any lung cell type are provided. 
-          We filtered out lowly expressed genes and genes not within +/- 1MB of a tested SNP. Thus, if there's no output, it means we did not use it for eQTL mapping.   
-          For the variants, rs ID should be provided. For variants without an assigned rs ID, please use chr:pos in hg38 (e.g., chr1:145830810)."),
+        p("Using the eQTL function, you can query significant eQTLs for the SNP and genes of your interest in a specific lung cell type (33 cell types). Allelic box plots (median, IQR, 1.5*IQR), a summary of all significant SNPs for the queried gene, and a summary of all the significant eQTLs for the queried SNP for any gene in any lung cell type are provided. We filtered out lowly expressed genes and genes not within +/- 1MB of a tested SNP. Thus, if there's no output, it means we did not use it for eQTL mapping. For the variants, rs ID should be provided. For variants without an assigned rs ID, please use chr:pos in hg38 (e.g., chr1:145830810)."),
         h3("Citation"),
         p("If you use ISOLUTION-SE, please cite the following papers:"),
         p("Li B, Luong T, Sisay E, Yin J, Zhang Z, Vaziripour M, Shin JH, Zhao Y, Byun J, Li Y, Lee CH, O'Neil M, Andresson T, Chang YS, Landi MT, Rothman N, Long E, Lan Q, Amos C, Zhou AX, Zhang T, Lee JG, Shi J, Xia J, Mancuso N, Zhang H, Kim EY, Choi J*. 
           Single-cell full-length transcriptome of human lung reveals genetic effects on isoform regulation beyond gene-level expression. 2025"),
-        p('Luong T, Yin J, Li B, Shin JH, Sisay E, Mikhail S, Qin F, Anyaso-Samuel S, Kane A, Golden A, Liu J, Zhang Z, Chang YS, Byun J, Han Y, Landi MT, Mancuso N, Banovich N, Rothman N, Amos C, Lan Q, Yu K, Zhang T, Long E, Shi J, Lee JG, Kim EY, and Choi J. Single-cell lung eQTL dataset of Asian never-smokers highlights the roles of alveolar cells in lung cancer etiology. 2026')
+        p('Luong T, Yin J, Li B, Shin JH, Sisay E, Mikhail S, Qin F, Anyaso-Samuel S, Kane A, Golden A, Liu J, Zhang Z, Chang YS, Byun J, Han Y, Landi MT, Mancuso N, Banovich N, Rothman N, Amos C, Lan Q, Yu K, Zhang T, Long E, Shi J, Lee JG, Kim EY, Choi J*. Single-cell lung eQTL dataset of Asian never-smokers highlights the roles of alveolar cells in lung cancer etiology. 2026')
       )
     })
     output$memory_currently_used <- renderText({
@@ -117,7 +107,7 @@ shinyApp(
     })
     output$gene_id_trans <- renderText({
       shiny::validate(
-        need(input$gene_name %in% c(unique(Isoform_info$annot_gene_name),""), "Gene symbol is not found in our data. Please check if there is a typo and try again.")
+        need(input$gene_name %in% c(unique(Isoform_info$annot_gene_name),""), "Gene symbol is not found in our data. Please check if there is a typo or other gene symbol names, and try again.")
       )
       searched_id <- unique(Isoform_info$annot_gene_id[which(input$gene_name == Isoform_info$annot_gene_name)])
       paste0("Ensembl ID for ", input$gene_name, ": ", searched_id)
@@ -127,7 +117,7 @@ shinyApp(
         need(input$gene_name %in% c(unique(Isoform_info$annot_gene_name),""), "")
       )
       isoform_id_list <- unique(Isoform_info$annot_transcript_id[which(input$gene_name == Isoform_info$annot_gene_name)])
-      paste0(length(isoform_id_list), " isoform(s) in total within ", input$gene_name, "\n", paste(isoform_id_list, collapse = ","))
+      paste0(length(isoform_id_list), " isoform(s) in total within ", input$gene_name, "\n", paste(isoform_id_list, collapse = "\n"))
     })
     output$page1 <- renderUI({
       sidebarLayout(
@@ -193,7 +183,7 @@ shinyApp(
     output$plot2 <- renderPlotly({
       input$Submit
       shiny::validate(
-        need(input$gene_id %in% unique(Isoform_info$annot_gene_id), "Gene is not found in our data. Please check if it is correct and we recommend you use the ID search in Introduction page.")
+        need(input$gene_id %in% unique(Isoform_info$annot_gene_id), "Gene is not found in our data. Please check if it is correct and we recommend you use the ID search in Isoform Structure. If your ID is correct, perhaps the isoform might not be tested in isoQTL mapping due to the abundance.")
       )
       p <- isoform_dist_plot(gene_id = input$gene_id, celltype = input$celltype2)
       ggplotly(p, width = 1200, height = 400)
@@ -250,9 +240,9 @@ shinyApp(
           plotlyOutput("plot4",width = 800,height = 700),
           br(),
           h3("Statistics of tested variant"),
-          DT::dataTableOutput("table2"),
+          DT::dataTableOutput("table2", width = 1200),
           h3("Statistics of tested isoform"),
-          DT::dataTableOutput("table1"),
+          DT::dataTableOutput("table1", width = 1200),
         )
       )
     })
@@ -260,10 +250,11 @@ shinyApp(
     output$plot3 <- renderPlotly({
       input$SubmitP2
       shiny::validate(
-        need(input$transcript %in% transcript_list, "Please check if the isoform id is correct. ISOLUTION would appreciate using an isoforms id listed in ID search of Introduction page."),
+        need(input$transcript %in% transcript_list, "Please check if the isoform id is correct. ISOLUTION would appreciate using an isoforms id listed in ID search in Isoform Structure. If your ID is correct, perhaps the isoform might not be tested in isoQTL mapping due to the abundance."),
         need(input$rs %in% snp_info$rsid, "The variant is not an isoQTL in Li et al.")
       )
       input$SubmitP2
+      
       p <- isoQTL_plot_pub(celltype = input$celltype1, rs = input$rs, transcript = input$transcript)
       ggplotly(p)
     })
@@ -284,6 +275,7 @@ shinyApp(
                        select(snp, chrom, pos, phenotype_id,phenotype_name,`Ref(0)`,`Alt(1)`,af,pval_nominal,`Alt effect size`,slope_se,Celltype)),
                     filter = "top",rownames = FALSE,extensions = 'Buttons', 
                     options = list(lengthMenu = list(c(25,50, 100, 200, 500, -1), list('25','50', '100', '200', '500', 'All')),
+                                   scrollX = TRUE,
                                    dom = 'Bfrtip', buttons = list('pageLength', 'csv', 'excel', 'print',list(extend = 'colvis'))))
     )
     
@@ -293,10 +285,16 @@ shinyApp(
                        select(snp, chrom, pos, phenotype_id,phenotype_name,`Ref(0)`,`Alt(1)`,af,pval_nominal,`Alt effect size`,slope_se,Celltype)),
                     filter = "top",rownames = FALSE,extensions = 'Buttons', 
                     options = list(lengthMenu = list(c(25,50, 100, 200, 500, -1), list('25','50', '100', '200', '500', 'All')),
+                                   scrollX = TRUE,
                                    dom = 'Bfrtip', buttons = list('pageLength', 'csv', 'excel', 'print',list(extend = 'colvis'))))
     )
     output$page4 <- renderUI({
       tagList(
+        p("Ensembl IDs and TALON IDs of genes and isoforms are required for the functions under ISOLUTION."),
+        textInput("gene_name", "Please input a gene symbol of interest (e.g., SCGB1A1) to find the IDs",width = 800),
+        textOutput("gene_id_trans"),
+        div(style="width:800px;",fluidRow(verbatimTextOutput("list_isoforms", placeholder = TRUE))),
+        tags$head(tags$style("#list_isoforms{overflow-y:scroll; max-height: 400px; background: ghostwhite;}")),
         uiOutput("plot.ui"),
         br(),
         downloadButton("downloadData", "Download")
@@ -307,7 +305,7 @@ shinyApp(
         searched_id <- unique(Isoform_info$annot_gene_id[which(input$gene_name == Isoform_info$annot_gene_name)])
         ison <- plot_isoform_structure(gene_id_of_interest = searched_id)$iso_n
         plotOutput("plot5", width = 1200, height = (400+ison*10))
-      }, error = function(e){"Please enter a valid gene symbol in Introduction page."})
+      }, error = function(e){""})
       
     })
     
@@ -415,9 +413,9 @@ shinyApp(
           plotlyOutput("plot23",width = 700,height = 600),
           br(),
           h3("Statistics of tested variant, significant associations aross cell types"),
-          DT::dataTableOutput("table22"),
+          DT::dataTableOutput("table22", width = 1200),
           h3("Statistics of tested gene, significant assocations across cell types"),
-          DT::dataTableOutput("table21"),
+          DT::dataTableOutput("table21", width = 1200),
         )
       )
     })
@@ -438,6 +436,7 @@ shinyApp(
                        select(snp, chrom, pos, phenotype_id,phenotype_name,`Ref(0)`,`Alt(1)`,af,pval_nominal,slope,slope_se,celltype)),
                     filter = "top",rownames = FALSE,extensions = 'Buttons', 
                     options = list(lengthMenu = list(c(25,50, 100, 200, 500, -1), list('25','50', '100', '200', '500', 'All')),
+                                   scrollX = TRUE,
                                    dom = 'Bfrtip', buttons = list('pageLength', 'csv', 'excel', 'print',list(extend = 'colvis'))))
     )
     
@@ -447,6 +446,7 @@ shinyApp(
                        select(snp, chrom, pos, phenotype_id,phenotype_name,`Ref(0)`,`Alt(1)`,af,pval_nominal,slope,slope_se,celltype)),
                     filter = "top",rownames = FALSE,extensions = 'Buttons', 
                     options = list(lengthMenu = list(c(25,50, 100, 200, 500, -1), list('25','50', '100', '200', '500', 'All')),
+                                   scrollX = TRUE,
                                    dom = 'Bfrtip', buttons = list('pageLength', 'csv', 'excel', 'print',list(extend = 'colvis'))))
     )
   })
