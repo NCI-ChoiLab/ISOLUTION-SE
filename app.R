@@ -366,7 +366,7 @@ shinyApp(
         sidebarPanel(
           textInput("rs_eqtl", label=h3("Input RS number:"),value="rs34214613"),
           hr(),
-          textInput("gene_name_eqtl", label=h3("Input gene symbol:"),value="SFTPA2"),
+          textInput("gene_name_eqtl2", label=h3("Input gene symbol:"),value="SFTPA2"),
           hr(),
           selectInput("celltype21",label=h3("Select cell type:"),
                       choices = list("AT2"="AT2",
@@ -419,10 +419,10 @@ shinyApp(
     
     output$plot23 <- renderPlotly({
       shiny::validate(
-        need(input$gene_name_eqtl %in% gene_info_eqtl$phenotype_name, "Please enter a valid gene symbol. If your gene symbol is correct, perhaps the gene is not tested in our eQTL mapping"),
+        need(input$gene_name_eqtl2 %in% gene_info_eqtl$phenotype_name, "Please enter a valid gene symbol. If your gene symbol is correct, perhaps the gene is not tested in our eQTL mapping"),
         need(input$rs_eqtl %in% snp_info_eqtl$snp, "The variant is not an eQTL SNP in Luong et al.")
       )
-      p <- eQTL_plot_pub(celltype = input$celltype21, rs = input$rs_eqtl, gene = input$gene_name_eqtl)
+      p <- eQTL_plot_pub(celltype = input$celltype21, rs = input$rs_eqtl, gene = input$gene_name_eqtl2)
       plotly::ggplotly(p)
     })
     
@@ -438,7 +438,7 @@ shinyApp(
     )
     
     output$table21 <- DT::renderDataTable(
-      DT::datatable((Nominal_combined_eqtl %>% filter((celltype == input$celltype21) & phenotype_name == input$gene_name_eqtl) %>% 
+      DT::datatable((Nominal_combined_eqtl %>% filter((celltype == input$celltype21) & phenotype_name == input$gene_name_eqtl2) %>% 
                        group_by(snp) %>% 
                        select(snp, chrom, pos, phenotype_id,phenotype_name,`Ref(0)`,`Alt(1)`,af,pval_nominal,slope,slope_se,celltype)),
                     filter = "top",rownames = FALSE,extensions = 'Buttons', 
