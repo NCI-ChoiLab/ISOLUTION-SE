@@ -43,12 +43,12 @@ for (ct in ct_name) {
 # }
 # ###########################
 eQTL_plot_pub = function(celltype,rs,gene){
-  exprs <- expr_list[[celltype]][,-c(1:4)]
-  rownames(exprs) <- expr_list[[celltype]]$gene_id
+  exprs <- expr_list_eqtl[[celltype]][,-c(1:4)]
+  rownames(exprs) <- expr_list_eqtl[[celltype]]$gene_id
   samples <- colnames(exprs)
-  rs2 = snp_info[which(snp_info$snp == rs),'variant_id']
+  rs2 = snp_info_eqtl[which(snp_info_eqtl$snp == rs),'variant_id']
   gene_sub = gene_info_eqtl[which(gene_info_eqtl$phenotype_name == gene), 'phenotype_id']
-  datainput2 <- data.frame(snp = genotypes[samples,rs2],
+  datainput2 <- data.frame(snp = genotypes_eqtl[samples,rs2],
                            expression = as.numeric(exprs[gene_sub,]))
   
   datainput2$snp_ra <- "0|0"

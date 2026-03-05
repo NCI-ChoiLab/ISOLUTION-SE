@@ -22,7 +22,7 @@ shinyApp(
       textOutput("memory_currently_used"),
       navbarPage(
         # Include the content of header.html
-        "ISoform QTLs Of LUng cell Types by lONg-read sequence and Short-read EQTLs",
+        "ISoform QTLs Of LUng cell Types by lONg-read sequence and matched Short-read EQTLs",
         tabPanel("Introduction", uiOutput('page3')),
         
         tabPanel(
@@ -64,40 +64,35 @@ shinyApp(
     output$page3 <- renderUI({
       tagList(
         h1("Welcome to ISOLUTION-SE!"),
-        p(em("New update of ISOLUTION (Feb-10-2026): Cell barcode matched short-read eQTL results were added!")),
-        p("ISOLUTION-SE is a single-cell lung isoform-level QTL and gene-level QTL dataset using long-read and short-read RNA sequencing of cell barcode matched samples. The dataset was generated using the same cDNA libraries from tumor-distant lung tissues of 129 Korean never-smoking women [with epithelial cells enriched]. Single-cell analyses were performed independently on the two datasets but showed highly consistent in cell type annotation and gene-level expression. The raw single-cell data can be found on the GEO under accession no. GSE313639 (long-read) and GSE319381 (short-read). On the website tool, we provide searchable portal and visualization for the isoform and gene expression, and QTL results across cell types. Long-read and short-read data are accessible under two main tabs, ISOLUTION and Short-read eQTL. ISOLUTION part includes three functions: (1) Visualize exon and splice site usage of isoforms within a gene detected in our dataset; (2) Isoform-level expression across cell types; (3) Visualize allelic effects of isoQTL along with summary statistics. Short-read eQTL part includes two functions: (1) Visualize gene expression across cell types at single-cell level, and (2) Visualize allelic effects of eQTL along with summary statistics."),
+        p(em("New update of ISOLUTION (Mar-10-2026): Cell barcode matched short-read eQTL results were added!")),
+        p("ISOLUTION-SE is a single-cell lung isoform-level QTL and gene-level QTL dataset using long-read and short-read RNA sequencing of cell barcode-matched samples. The dataset was generated using the same cDNA libraries from tumor-distant lung tissues of 129 Korean never-smoking women with cell-type balancing, enriching epithelial cells. Single-cell analyses were performed independently for each dataset, which showed highly consistent cell type annotation and gene-level expression. On this website, we provide a searchable portal and visualization for the isoform and gene expression, and QTL results across lung cell types. Long-read and short-read data are accessible under two main tabs, ISOLUTION and Short-read eQTL. ISOLUTION part includes three functions visualizing: (1) Exon and splice site structure of isoforms within a gene detected in our dataset, with a genome annotation GTF file provided; (2) Isoform-level expression across cell types; and (3) Allelic effects of isoQTL along with summary statistics. Short-read eQTL part includes two functions: (1) Visualize gene expression across cell types at the single-cell level, and (2) Visualize allelic effects of eQTL along with summary statistics."),
         h2("ISOLUTION"),
         
         p("The functions of ", strong(em("Isoform Structure")), ", ", strong(em("Isoform expression")), " and ", 
           strong(em("isoQTL")), 
           "are under ISOLUTION tab and provide the results of single-cell long-read data."),
         h3("Isoform Structure"),
-        p("Query a gene by gene symbol, the Isoform Structure funtion will plot the structure of isoforms within the gene of your interest. 
-        The isoforms are categorized and colored according to the structural categories of ", a(href="https://www.nature.com/articles/s41592-024-02229-2", "SQANTI3"),", including 
-        full-splice-match (FSM), incomplete-splice-match (ISM), novel-in-catalog (NIC), novel-not-in-catalog (NNC), antisense, fusion, genic genomic and intergenic.
-          We also provide the annotation file (.gtf) of the gene for downloading, 
-          which can be further visualized in ", a(href="https://genome.ucsc.edu/", "UCSC genome browser" ), " and used for extacting specific transcript sequence of isoform. The ensembl IDs of genes and isoforms would be required for the other functions under ISOLUTION.", noWS=TRUE),
+        p("Query a gene of interest by gene symbol, and the Isoform Structure function will plot the structure of isoforms within the gene of your interest. 
+        The isoforms are categorized and colored according to the structural categories of ", a(href="https://www.nature.com/articles/s41592-024-02229-2", "SQANTI3"),
+          ", including full-splice-match (FSM), incomplete-splice-match (ISM), novel-in-catalog (NIC), novel-not-in-catalog (NNC), antisense, fusion, genic genomic and intergenic. 
+          We also provide the annotation file (.gtf) of the gene for downloading, which can be further visualized in ", 
+          a(href="https://genome.ucsc.edu/", "UCSC genome browser" ), " and used for extracting specific transcript sequences of isoforms. The ensembl IDs of genes and isoforms are required for the other functions under ISOLUTION.", noWS=TRUE),
         h3("Isoform Expression"),
-        p("Using Isoform Expression function, you could query the gene of your interest for their isoform profile across lung cell types. 
-        Enter the number to check the expression levels of the top N most 
-        abundant isoforms of the queried gene across 37 lung cell types 
-        types (e.g., top 4 isoforms usually account for the most of total gene expression levels)."),
-        p("You can select a specific cell type to check the isoform composition within the cell type. 
-          For conciseness of plotting, we set a cap for the number of isoforms at 37; 
-          > 90% of genes have a lower number of isoforms than this."),
+        p("Using Isoform Expression function, you could query the gene of your interest for their isoform profile across lung cell types. Enter the number to check the expression levels of the top N most abundant isoforms of the queried gene across 37 lung cell types (e.g., top 4 isoforms usually account for the most of total gene expression levels)."),
+        p("You can select a specific cell type to check the isoform composition within the cell type. For conciseness of plotting, we set a cap for the number of isoforms at 37; > 90% of genes have a lower number of isoforms than this."),
         h3("isoQTL"),
-        p("Using isoQTL function, you could query significant isoQTLs for the SNP and transcript isoform of your interest in a specific lung cell type. Allelic box plots, a summary of all significant SNPs for the queried transcript isoform, and a summary of all the significant isoQTLs for the queried SNP for any isoform of the gene in any lung cell type are provided. Specific transcript IDs can be obtained in the searching box above. IDs starting with TALON are novel isoforms identified by long-read sequencing in our dataset. For the variants, rs ID should be provided. For variants without an assigned rs ID, please use chr:pos in hg38 (e.g., chr1:145830810)."),
+        p("Using isoQTL function, you could query significant isoQTLs for the SNP and transcript isoform of your interest in a specific lung cell type. Allelic box plots, a summary of all significant SNPs for the queried transcript isoform, and a summary of all the significant isoQTLs for the queried SNP for any isoform of the gene in any lung cell type are provided. Specific transcript IDs can be obtained in the search box above. IDs starting with TALON are novel isoforms identified by long-read sequencing in our dataset. For the variants, rs ID should be provided. For variants without an assigned rs ID, please use chr:pos in hg38 (e.g., chr1:145830810)."),
         h2("Short-read eQTL"),
         p("The functions of ", strong(em("Gene expression")), " and ", 
           strong(em("eQTL")), 
           "are under Short-read eQTL tab and provide the results of cell-barcode matched single-cell short-read data."),
         h3("Gene Expression"),
-        p("Using Gene Expression function, you could query the normalized expression of your gene of your interest across our 41 lung cell types. Cell types with more than 3,000 cells were downsampled to 3,000 cells, while cell types with less than or equal to 3,000 cells kept their original cell numbers. This was to maximize computation efficiency while still representing our dataset."),
+        p("Using Gene Expression function, you could query the normalized expression of genes of your interest across our 41 lung cell types. For plotting, cell types with more than 3,000 cells were downsampled to 3,000 cells, while cell types with less than or equal to 3,000 cells kept their original cell numbers. This was to maximize computation efficiency while still representing our dataset."),
         h3("eQTL"),
         p("Using the eQTL function, you can query significant eQTLs for the SNP and genes of your interest in a specific lung cell type (33 cell types). Allelic box plots (median, IQR, 1.5*IQR), a summary of all significant SNPs for the queried gene, and a summary of all the significant eQTLs for the queried SNP for any gene in any lung cell type are provided. We filtered out lowly expressed genes and genes not within +/- 1MB of a tested SNP. Thus, if there's no output, it means we did not use it for eQTL mapping. For the variants, rs ID should be provided. For variants without an assigned rs ID, please use chr:pos in hg38 (e.g., chr1:145830810)."),
         h3("Citation"),
         p("If you use ISOLUTION-SE, please cite the following papers:"),
-        p("Li B, Luong T, Sisay E, Yin J, Zhang Z, Vaziripour M, Shin JH, Zhao Y, Byun J, Li Y, Lee CH, O'Neil M, Andresson T, Chang YS, Landi MT, Rothman N, Long E, Lan Q, Amos C, Zhou AX, Zhang T, Lee JG, Shi J, Xia J, Mancuso N, Zhang H, Kim EY, Choi J*. 
+        p("Li B, Luong T, Sisay E, Yin J, Zhang Z, Vaziripour M, Shin JH, Zhao Y, Byun J, Li Y, Lee CH, O'Neil M, Andresson T, Chang YS, Gazal S, Landi MT, Rothman N, Long E, Lan Q, Amos C, Zhou AX, Zhang T, Lee JG, Shi J, Mancuso N, Xia J, Zhang H, Kim EY, Choi J*. 
           Single-cell full-length transcriptome of human lung reveals genetic effects on isoform regulation beyond gene-level expression. 2025"),
         p('Luong T, Yin J, Li B, Shin JH, Sisay E, Mikhail S, Qin F, Anyaso-Samuel S, Kane A, Golden A, Liu J, Zhang Z, Chang YS, Byun J, Han Y, Landi MT, Mancuso N, Banovich N, Rothman N, Amos C, Lan Q, Yu K, Zhang T, Long E, Shi J, Lee JG, Kim EY, Choi J*. Single-cell lung eQTL dataset of Asian never-smokers highlights the roles of alveolar cells in lung cancer etiology. 2026')
       )
@@ -253,6 +248,7 @@ shinyApp(
         need(input$transcript %in% transcript_list, "Please check if the isoform id is correct. ISOLUTION would appreciate using an isoforms id listed in ID search in Isoform Structure. If your ID is correct, perhaps the isoform might not be tested in isoQTL mapping due to the abundance."),
         need(input$rs %in% snp_info$rsid, "The variant is not an isoQTL in Li et al.")
       )
+      
       input$SubmitP2
       
       p <- isoQTL_plot_pub(celltype = input$celltype1, rs = input$rs, transcript = input$transcript)
@@ -290,7 +286,7 @@ shinyApp(
     )
     output$page4 <- renderUI({
       tagList(
-        p("Ensembl IDs and TALON IDs of genes and isoforms are required for the functions under ISOLUTION."),
+        p("Ensembl/TALON IDs of genes and isoforms are required for the functions under ISOLUTION."),
         textInput("gene_name", "Please input a gene symbol of interest (e.g., SCGB1A1) to find the IDs",width = 800),
         textOutput("gene_id_trans"),
         div(style="width:800px;",fluidRow(verbatimTextOutput("list_isoforms", placeholder = TRUE))),
@@ -423,7 +419,7 @@ shinyApp(
     output$plot23 <- renderPlotly({
       shiny::validate(
         need(input$gene_name_eqtl %in% gene_info_eqtl$phenotype_name, "Please enter a valid gene symbol. If your gene symbol is correct, perhaps the gene is not tested in our eQTL mapping"),
-        need(input$rs %in% snp_info$snp, "The variant is not an eQTL SNP in Luong et al.")
+        need(input$rs_eqtl %in% snp_info_eqtl$snp, "The variant is not an eQTL SNP in Luong et al.")
       )
       p <- eQTL_plot_pub(celltype = input$celltype21, rs = input$rs_eqtl, gene = input$gene_name_eqtl)
       plotly::ggplotly(p)
@@ -441,7 +437,7 @@ shinyApp(
     )
     
     output$table21 <- DT::renderDataTable(
-      DT::datatable((Nominal_combined_eqtl %>% filter((celltype == input$celltype21) & phenotype_id == input$gene_name_eqtl) %>% 
+      DT::datatable((Nominal_combined_eqtl %>% filter((celltype == input$celltype21) & phenotype_name == input$gene_name_eqtl) %>% 
                        group_by(snp) %>% 
                        select(snp, chrom, pos, phenotype_id,phenotype_name,`Ref(0)`,`Alt(1)`,af,pval_nominal,slope,slope_se,celltype)),
                     filter = "top",rownames = FALSE,extensions = 'Buttons', 
